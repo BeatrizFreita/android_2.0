@@ -2,9 +2,12 @@ package br.senai.sp.jandira.imcapp20_a.dao
 
 import android.content.ContentValues
 import android.content.Context
+import android.util.Log
 import br.senai.sp.jandira.imcapp20_a.model.Usuario
+import java.time.LocalDate
+import java.time.Period
 
-class   UsuarioDao(val context: Context, val usuario: Usuario) {
+class   UsuarioDao(val context: Context, val usuario: Usuario?) {
 
     val dbHelper = ImcDataBase.getDatabase(context)
 
@@ -15,18 +18,97 @@ class   UsuarioDao(val context: Context, val usuario: Usuario) {
 
         // *** Criar os valores que serão inseridos no banco
         val dados = ContentValues()
-        dados.put("nome", usuario.nome)
+        dados.put("nome", usuario!!.nome)
         dados.put("profissao", usuario.profissao)
         dados.put("email", usuario.email)
         dados.put("senha", usuario.senha)
         dados.put("altura", usuario.altura)
         dados.put("data_nascimento", usuario.dataNascimento.toString())
         dados.put("sexo", usuario.sexo.toString())
+        dados.put("peso", usuario.peso)
 
         // *** Executar o comando de gravação
         db.insert("tb_usuario", null, dados)
 
         db.close()
     }
+
+    fun autenticar(email: String, senha: String) :Boolean {
+        // Obter uma instancia de Leitura de banco
+        val db = dbHelper.readableDatabase
+
+        // Determinar quais são as colunas da tabela
+        // Que nós queremos no resultado
+        // Vamos criar uma projeção
+
+        val  campos = arrayOf(
+            "email",
+            "senha",
+            "nome",
+            "profissao",
+            "data_nascimento")
+
+        // Vamos definir o filtro da consulta
+        // O que estamos fazendo  é construir o filtro
+        // "WHERE email = ? AND senha = ?"
+        val filtro = "email = ? AND senha = ?"
+
+        // Vamos criar os argumentos do filtro
+        // Vamos dizer ao Kotlin quais serão os valores
+        // Que deverão ser substituidos pelas "?" no filtro
+        val argumentos = arrayOf(email, senha)
+
+        // Executar a consulta e obter o resultado em um "cursor"
+        val cursor = db.query(
+            "tb_usuario",
+            campos,
+            filtro,
+            argumentos,
+            null,
+            null,
+            null
+        )
+
+        Log.i("XPTO", "Linhas${cursor.count.toString()}")
+
+        // Guardar a quantidade de linhas obtidas na consulta
+        val linhas = cursor.count
+
+        var autenticado = false;
+
+        if(linhas > 0) {
+            autenticado = true
+
+            cursor.moveToFirst()
+            val emailIndex = cursor.getColumnIndex("email")
+            val nomeIndex = cursor.getColumnIndex("nome")
+            val profissaoIndex = cursor.getColumnIndex("profissao")
+            val dataNascimentoIndex = cursor.getColumnIndex("data_nascimento")
+
+
+            // Criação/atualização banco de dados
+
+            val dados = context.getSharedPreferences("dados_usuario", Context.MODE_PRIVATE)
+            val editor = dados.edit()
+
+            editor.putString("nome", cursor.getString(nomeIndex))
+            editor.putString("email", cursor.getString(emailIndex))
+            editor.putString("profissao", cursor.getString(profissaoIndex))
+            editor.putString("idade", cursor.getString(dataNascimentoIndex))
+            editor.putInt("peso", 0)
+            editor.apply()
+
+            Log.i("XPTO",
+                cursor.getString(emailIndex))
+        }
+
+
+
+
+        db.close()
+        return autenticado
+    }
+
+
 
 }

@@ -34,7 +34,12 @@ class DashBoardActivity : AppCompatActivity() {
         tv_profile_name.text = dados.getString("nome", "")
         tv_profile_occupation.text = dados.getString("profissao", "")
         tv_weight.text = dados.getInt("peso", 0).toString()
-        tv_age.text = dados.getInt("idade", 0).toString()
+        tv_age.text = dados.getString("idade", "")
+
+//        val mailPreferences = dados.getString("email", "Não encontrado")
+////        val namePreferences = dados.getString("nome", "Não encontrado")
+////        val areaPreferences = dados.getString("profissao", "Não encontrado")
+////        val pesoPreferences = dados.getString("peso", "Não encontrado")
 
         // *** Colocar foto do Github no ImageView
         val url = "https://avatars.githubusercontent.com/u/14265058?v=4"

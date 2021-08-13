@@ -37,7 +37,8 @@ class NovoUsuarioActivity : AppCompatActivity() {
                 et_altura.text.toString().toDouble(),
                 et_data_nascimento.text.toString(),
                 'M',
-                null)
+                null,
+                et_peso.text.toString())
 
             val dao =  UsuarioDao(this, usuario)
             dao.gravar()
