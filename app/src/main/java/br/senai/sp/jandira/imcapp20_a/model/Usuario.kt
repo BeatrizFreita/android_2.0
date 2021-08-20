@@ -12,6 +12,6 @@ data class Usuario (
     var altura: Double,
     var dataNascimento: String,
     var sexo: Char,
-    var foto: Bitmap? = null,
-    var peso: String
+    var foto: Bitmap? = null
+
 )

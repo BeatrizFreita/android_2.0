@@ -25,7 +25,7 @@ class   UsuarioDao(val context: Context, val usuario: Usuario?) {
         dados.put("altura", usuario.altura)
         dados.put("data_nascimento", usuario.dataNascimento.toString())
         dados.put("sexo", usuario.sexo.toString())
-        dados.put("peso", usuario.peso)
+
 
         // *** Executar o comando de gravação
         db.insert("tb_usuario", null, dados)
@@ -78,31 +78,24 @@ class   UsuarioDao(val context: Context, val usuario: Usuario?) {
 
         if(linhas > 0) {
             autenticado = true
-
             cursor.moveToFirst()
+
             val emailIndex = cursor.getColumnIndex("email")
             val nomeIndex = cursor.getColumnIndex("nome")
             val profissaoIndex = cursor.getColumnIndex("profissao")
             val dataNascimentoIndex = cursor.getColumnIndex("data_nascimento")
-
-
-            // Criação/atualização banco de dados
-
+            val dataNascimento = cursor.getString(dataNascimentoIndex)
             val dados = context.getSharedPreferences("dados_usuario", Context.MODE_PRIVATE)
             val editor = dados.edit()
-
             editor.putString("nome", cursor.getString(nomeIndex))
             editor.putString("email", cursor.getString(emailIndex))
             editor.putString("profissao", cursor.getString(profissaoIndex))
-            editor.putString("idade", cursor.getString(dataNascimentoIndex))
+            editor.putString("idade", obterDiferencaEntreDatasEmAnos(dataNascimento))
             editor.putInt("peso", 0)
             editor.apply()
 
-            Log.i("XPTO",
-                cursor.getString(emailIndex))
+
         }
-
-
 
 
         db.close()

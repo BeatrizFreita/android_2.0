@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.TextView
 import br.senai.sp.jandira.imcapp20_a.R
 import br.senai.sp.jandira.imcapp20_a.dao.UsuarioDao
+import br.senai.sp.jandira.imcapp20_a.utils.obterDiferencaEntreDatasEmAnos
 
 class LoginActivity : AppCompatActivity() {
 
@@ -21,6 +22,13 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        //*** TESTAR METODO OBTER DIFEREÇA
+//
+//        obterDiferencaEntreDatasEmAnos ("10/10/1996")
+//        obterDiferencaEntreDatasEmAnos ( "10/5/1990")
+//        obterDiferencaEntreDatasEmAnos ( "3/8/1990")
+//        obterDiferencaEntreDatasEmAnos ( "5/10/1996")
 
         val dados = getSharedPreferences("dados_usuario", Context.MODE_PRIVATE)
         val lembrar = dados.getBoolean("lembrar", false)

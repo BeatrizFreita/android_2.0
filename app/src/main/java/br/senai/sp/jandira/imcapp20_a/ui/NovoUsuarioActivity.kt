@@ -1,5 +1,6 @@
 package br.senai.sp.jandira.imcapp20_a.ui
 
+import android.app.DatePickerDialog
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,15 +9,41 @@ import br.senai.sp.jandira.imcapp20_a.R
 import br.senai.sp.jandira.imcapp20_a.dao.UsuarioDao
 import br.senai.sp.jandira.imcapp20_a.model.Usuario
 import kotlinx.android.synthetic.main.activity_novo_usuario.*
+import java.util.*
 
 class NovoUsuarioActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_novo_usuario)
 
+        // Criar calendário
+
+        val calendario = Calendar.getInstance()
+        val ano = calendario.get(Calendar.YEAR)
+        val mes = calendario.get(Calendar.MONTH)
+        val dia = calendario.get(Calendar.DAY_OF_MONTH)
+
+        //Abrir um componente DatePikerDialog
+        et_data_nascimento.setOnClickListener {
+            val dpd = DatePickerDialog(this, DatePickerDialog.OnDateSetListener{view, _ano, _mes, _dia ->
+                var diaZero = "$_dia"
+                var mesZero = "$_mes"
+
+                if(_dia < 10) {
+                    _dia
+                }
+                if (_mes < 10){
+                    mesZero = "0${_mes + 1}"
+                }
+                et_data_nascimento.setText("$diaZero/${mesZero}/$_ano")
+            }, ano, mes, dia)
+
+            dpd.show()
+        }
+
         bt_gravar.setOnClickListener {
             // *** Criar o sharedPreferences
-            val dados = getSharedPreferences("dados_usuario", Context.MODE_PRIVATE)
+//            val dados = getSharedPreferences("dados_usuario", Context.MODE_PRIVATE)
 
 //            val editor = dados.edit()
 //            editor.putString("nome", et_nome.text.toString())
@@ -28,8 +55,7 @@ class NovoUsuarioActivity : AppCompatActivity() {
 //            editor.apply()
 
             //Gravar o novo usuário no banco de dados
-            val usuario = Usuario(
-                0,
+            val usuario = Usuario(0,
                 et_email.text.toString(),
                 et_senha.text.toString(),
                 et_nome.text.toString(),
@@ -37,8 +63,7 @@ class NovoUsuarioActivity : AppCompatActivity() {
                 et_altura.text.toString().toDouble(),
                 et_data_nascimento.text.toString(),
                 'M',
-                null,
-                et_peso.text.toString())
+                null )
 
             val dao =  UsuarioDao(this, usuario)
             dao.gravar()
