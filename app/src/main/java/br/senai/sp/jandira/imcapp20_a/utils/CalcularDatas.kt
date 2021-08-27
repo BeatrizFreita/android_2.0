@@ -8,7 +8,8 @@ import java.time.format.DateTimeFormatter
 fun obterDiferencaEntreDatasEmAnos(dataInicio: String) : String {
 
     var hoje: LocalDate = LocalDate.now()
-    var dataIni = LocalDate.parse(dataInicio, DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+    var dataIni = LocalDate.parse(
+        dataInicio, DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 
 //    var ano = dataInicio.substring(0, 3).toInt()
 //    var mes = dataInicio.substring(5, 6).toInt()

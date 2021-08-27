@@ -2,8 +2,12 @@ package br.senai.sp.jandira.imcapp20_a.ui
 
 import android.app.DatePickerDialog
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import br.senai.sp.jandira.imcapp20_a.R
 import br.senai.sp.jandira.imcapp20_a.dao.UsuarioDao
@@ -11,10 +15,19 @@ import br.senai.sp.jandira.imcapp20_a.model.Usuario
 import kotlinx.android.synthetic.main.activity_novo_usuario.*
 import java.util.*
 
+const val CODE_IMADE = 100
+
 class NovoUsuarioActivity : AppCompatActivity() {
+    var imageBitmap: Bitmap? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_novo_usuario)
+
+        //Detecyar o click no texto "Trocar foto"
+        tv_trocar_foto.setOnClickListener {
+            abrirGaleria()
+        }
 
         // Criar calendário
 
@@ -63,7 +76,7 @@ class NovoUsuarioActivity : AppCompatActivity() {
                 et_altura.text.toString().toDouble(),
                 et_data_nascimento.text.toString(),
                 'M',
-                null )
+                imageBitmap)
 
             val dao =  UsuarioDao(this, usuario)
             dao.gravar()
@@ -75,5 +88,37 @@ class NovoUsuarioActivity : AppCompatActivity() {
 
         }
 
+    }
+
+    private fun abrirGaleria() {
+
+        //Chamando galeria de imagens
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+
+        //Definit qual o tipo de conteúdo deverá ser obtido
+        intent.type = "image/*"
+
+        //Iniciar a Activity, mas neste caso nós queremos que esta Activity retorne algo pra gente, a imagem
+        startActivityForResult(
+            Intent.createChooser(intent, "Escolha uma foto"), CODE_IMADE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == CODE_IMADE && resultCode == -1){
+
+            //Recuperar a imagem no Stream
+            val stream = contentResolver.openInputStream(data!!.data!!)
+
+            //Transformar stream em um BitMap
+            imageBitmap = BitmapFactory.decodeStream(stream)
+
+            //Colocar a imagem no ImageView
+            img_profile.setImageBitmap(imageBitmap)
+        }
+
+        Log.i("PHOTO_GALERY",
+            "RESULT_CODE = $resultCode REQUEST_CODE = $requestCode")
     }
 }

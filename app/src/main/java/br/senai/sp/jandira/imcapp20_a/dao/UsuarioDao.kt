@@ -4,6 +4,8 @@ import android.content.ContentValues
 import android.content.Context
 import android.util.Log
 import br.senai.sp.jandira.imcapp20_a.model.Usuario
+import br.senai.sp.jandira.imcapp20_a.utils.converterBitmapParaByteArray
+import br.senai.sp.jandira.imcapp20_a.utils.obterDiferencaEntreDatasEmAnos
 import java.time.LocalDate
 import java.time.Period
 
@@ -25,6 +27,7 @@ class   UsuarioDao(val context: Context, val usuario: Usuario?) {
         dados.put("altura", usuario.altura)
         dados.put("data_nascimento", usuario.dataNascimento.toString())
         dados.put("sexo", usuario.sexo.toString())
+        dados.put("foto", converterBitmapParaByteArray(usuario.foto))
 
 
         // *** Executar o comando de gravação
@@ -84,7 +87,12 @@ class   UsuarioDao(val context: Context, val usuario: Usuario?) {
             val nomeIndex = cursor.getColumnIndex("nome")
             val profissaoIndex = cursor.getColumnIndex("profissao")
             val dataNascimentoIndex = cursor.getColumnIndex("data_nascimento")
+
             val dataNascimento = cursor.getString(dataNascimentoIndex)
+
+            // Criação/atualização do sharedPreferences que será
+            // utilizado no restante da aplicação
+
             val dados = context.getSharedPreferences("dados_usuario", Context.MODE_PRIVATE)
             val editor = dados.edit()
             editor.putString("nome", cursor.getString(nomeIndex))
@@ -93,15 +101,10 @@ class   UsuarioDao(val context: Context, val usuario: Usuario?) {
             editor.putString("idade", obterDiferencaEntreDatasEmAnos(dataNascimento))
             editor.putInt("peso", 0)
             editor.apply()
-
-
         }
-
 
         db.close()
         return autenticado
     }
-
-
 
 }

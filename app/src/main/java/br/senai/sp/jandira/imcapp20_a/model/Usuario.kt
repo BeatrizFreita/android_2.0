@@ -13,5 +13,4 @@ data class Usuario (
     var dataNascimento: String,
     var sexo: Char,
     var foto: Bitmap? = null
-
 )
