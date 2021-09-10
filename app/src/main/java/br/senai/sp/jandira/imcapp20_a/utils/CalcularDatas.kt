@@ -5,22 +5,10 @@ import java.time.LocalDate
 import java.time.Period
 import java.time.format.DateTimeFormatter
 
-fun obterDiferencaEntreDatasEmAnos(dataInicio: String) : String {
+fun obterDiferencaEntreDatasEmAnos (dataInicio: String)  : String{
+    var hoje : LocalDate = LocalDate.now()
+    var dataIni = LocalDate.parse(dataInicio, DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 
-    var hoje: LocalDate = LocalDate.now()
-    var dataIni = LocalDate.parse(
-        dataInicio, DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-
-//    var ano = dataInicio.substring(0, 3).toInt()
-//    var mes = dataInicio.substring(5, 6).toInt()
-//    var dia = dataInicio.substring(8, 9).toInt()
-//    var nascimento = LocalDate.of(ano, mes, dia)
-
-    var idade = Period.between(dataIni, hoje)
-
-
+    var idade = Period.between(dataIni,hoje)
     return idade.years.toString()
-
-
-
 }

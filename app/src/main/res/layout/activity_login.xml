@@ -92,7 +92,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginTop="12dp"
-        android:inputType="numberPassword"
+        android:inputType="textPassword"
         android:background="@drawable/edit_text_login_background"
         android:padding="16dp"
         android:hint="Senha"
